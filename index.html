@@ -40,34 +40,6 @@
             allowMultiple: true
         }) // Pass any littlefoot settings here.
       </script>
-      <script type="application/javascript">
-        document.addEventListener('click', function (event) {
-          if (event.target.classList.contains('copy-footnote')) {
-            const footnoteId = event.target.getAttribute('footnote-id');
-            console.log(footnoteId);
-            if (footnoteId) {
-              console.log(footnoteId);
-              // Select the footnote element by its ID and extract its text content
-              const footnoteContent = document.getElementById(footnoteId)?.innerText;
-              if (footnoteContent) {
-                // Use the Clipboard API to copy the footnote content
-                navigator.clipboard.writeText(footnoteContent)
-                    .then(() => {
-                        // Provide user feedback, like a success message
-                        console.log('Footnote content copied: ',footnoteContent);
-                        alert('Footnote copied to clipboard!');
-                    })
-                    .catch((err) => {
-                        console.error('Failed to copy text: ', err);
-                    });
-              } 
-              else {
-                console.error('Footnote content not found.');
-              }
-            }
-          }
-});
-      </script>
 
 </body>
 </html>

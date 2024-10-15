@@ -3,6 +3,25 @@ import type { FootnoteAction, UseCases } from '../use-cases'
 
 const SELECTOR_FOOTNOTE = '[data-footnote-id]'
 
+const copyToClipboard = (id: string|null) => {
+  if(id){
+    console.log('found a copy button for footnode id: ', id)
+    const footnoteContent = document.getElementById(id)?.innerText;
+    if (footnoteContent) {
+        // Use the Clipboard API to copy the footnote content
+        navigator.clipboard.writeText(footnoteContent)
+            .then(() => {
+                // Provide user feedback, like a success message
+                console.log('Footnote content copied: ',footnoteContent);
+                alert('Footnote copied to clipboard!');
+            })
+            .catch((err) => {
+                console.error('Failed to copy text: ', err);
+            });
+    }
+  }
+}
+
 const closestTarget = (event: Event, selector: string) =>
   (event.target as HTMLElement).closest<HTMLElement>(selector)
 
@@ -49,6 +68,20 @@ export function addListeners(useCases: UseCases): () => void {
       useCases.touchOutside()
     }
   }
+
+  const copyContent = (event: Event) => {
+    if (closestTarget(event, '[data-footnote-popover]')) {
+      const copyButton = document.querySelector('.copy-footnote');
+      if(copyButton){
+        const footnoteId = copyButton.getAttribute('footnote-id');
+        copyToClipboard(footnoteId);
+      }
+      else {
+        useCases.touchOutside();
+      }
+    }
+  }
+
   const dismissOnEscape = (event: KeyboardEvent) => {
     if (event.keyCode === 27 || event.key === 'Escape' || event.key === 'Esc') {
       useCases.dismissAll()
@@ -63,6 +96,7 @@ export function addListeners(useCases: UseCases): () => void {
   const options = { signal: controller.signal }
 
   onDocument('touchend', toggleOnTouch, options)
+  onDocument('click', copyContent, options)
   onDocument('click', toggleOnTouch, options)
   onDocument('keyup', dismissOnEscape, options)
   onDocument('gestureend', throttledReposition, options)
