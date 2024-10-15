@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="dist/littlefoot.css"/>
     <script src="dist/littlefoot.js" type="application/javascript"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <title>Document</title>
 </head>
 <body>
@@ -19,13 +20,13 @@
           <ol>
             <li id="fn:1">
               <p>
-                This is footnote number 1.
+                This is footnote number 1. <button><i class="fa-solid fa-copy copy-footnote" footnote-id="fn:1"></i></button>
                 <a href="#fnref:1" class="reversefootnote">&#160;&#8617;</a>
               </p>
             </li>
             <li id="fn:2">
               <p>
-                This is footnote number 2.
+                This is footnote number 2. <button><i class="fa-solid fa-copy copy-footnote" footnote-id="fn:2"></i></button>
                 <a href="#fnref:2" class="reversefootnote">&#160;&#8617;</a>
               </p>
             </li>
@@ -35,9 +36,38 @@
       <script type="application/javascript">
         littlefoot.littlefoot({
             activateOnHover: true,
-            hoverDelay: 1000,
+            hoverDelay: 200,
             allowMultiple: true
         }) // Pass any littlefoot settings here.
       </script>
+      <script type="application/javascript">
+        document.addEventListener('click', function (event) {
+          if (event.target.classList.contains('copy-footnote')) {
+            const footnoteId = event.target.getAttribute('footnote-id');
+            console.log(footnoteId);
+            if (footnoteId) {
+              console.log(footnoteId);
+              // Select the footnote element by its ID and extract its text content
+              const footnoteContent = document.getElementById(footnoteId)?.innerText;
+              if (footnoteContent) {
+                // Use the Clipboard API to copy the footnote content
+                navigator.clipboard.writeText(footnoteContent)
+                    .then(() => {
+                        // Provide user feedback, like a success message
+                        console.log('Footnote content copied: ',footnoteContent);
+                        alert('Footnote copied to clipboard!');
+                    })
+                    .catch((err) => {
+                        console.error('Failed to copy text: ', err);
+                    });
+              } 
+              else {
+                console.error('Footnote content not found.');
+              }
+            }
+          }
+});
+      </script>
+
 </body>
 </html>
